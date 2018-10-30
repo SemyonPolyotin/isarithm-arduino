@@ -2,5 +2,6 @@
     "terminal.integrated.env.osx": {
         "PATH": "/Users/matthewpoletin/.platformio/penv/bin:/Users/matthewpoletin/.platformio/penv:/opt/syncthing/v0.14.40/:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin",
         "PLATFORMIO_CALLER": "vscode"
-    }
+    },
+    "editor.insertSpaces": false
 }
