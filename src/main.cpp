@@ -3,22 +3,47 @@
 
 #include "Drive/Drive.h"
 
-Drive* drive;
+Drive* drive1;
+Drive* drive2;
 
 // Настройка программы
 void setup()
 {
+	Serial.begin(9600);
+
 	// Создание и инициализация первого серво двигателя
-	drive = new Drive(18);
-	drive->SetAngle(0);
+	drive1 = new Drive(18, "one");
+	if (!drive1->Init(90))
+	{
+		// TODO: Выйти из программы
+	}
+	delay(2000);
+	Serial.println("Program started");
 }
+
+bool up = true;
+int switchTime = 5000;
 
 // Основной цикл программы
 void loop()
 {
-	// Обновление состояния серво двигателя
-	drive->SetAngleSlow(180, 1000);
-	delay(1000);
-	drive->SetAngleSlow(0, 1000);
-	delay(1000);
+	// Обновление подсистем
+	drive1->Update();		// Обновление состояния серво двигателя
+
+	// Симуляция управления (смена от 0 до 180 за 2, пауза 3 сек)
+	int time = millis();
+	if (0 < time % (2 * switchTime) && time % (2 * switchTime) < switchTime && up)
+	{
+		Serial.println("Moving towards 180");
+		drive1->ChangeAngle(180, switchTime / 2);
+		up = !up;
+	}
+	else if (switchTime < time % (2 * switchTime) && time % (2 * switchTime) < 2 * switchTime && !up)
+	{
+		Serial.println("Moving towards 0");
+		drive1->ChangeAngle(0, switchTime / 2);
+		up = !up;
+	}
+	
+	delay(switchTime/10);
 }

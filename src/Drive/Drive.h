@@ -1,60 +1,83 @@
 #pragma once
 
-#include <ESP32Servo.h> 
+#include <ESP32Servo.h>
 
 enum DriveState
 {
-    UNDEFINED = 0,
+	UNDEFINED = 0,
 
-    ANGLE,  // Смена угла
-    MOVE,   // Движение в направлении
+	// Смена угла
+	CHANGE_ANGLE,
+	// Движение в направлении
+	MOVE_DIRECTION,
 };
 
 enum DriveMoveSpeed
 {
-    SLOW = 0,   // Медлено
-    MEDIUM = 1, // Средне
-    FAST = 2,   // Быстро
+	SLOW = 0,   // Медлено
+	MEDIUM = 1, // Средне
+	FAST = 2,   // Быстро
 };
 
 // Класс для управления серво двигателем
 class Drive
 {
 private:
-    // Серво двигатель
-    Servo servo;
+	// Имя двигателя
+	String name = "no_name";
 
-    // Текущее состояние двигателя
-    DriveState state = UNDEFINED;
-    // Текущий угол повопрота
-    int currentAngle;
+	// Серво двигатель
+	Servo servo;
 
-    // Целевое направление смены угла
-    int angleTo;
-    // Напрвление движения
-    int moveDir = 0;
+	// Текущее состояние двигателя
+	DriveState state = DriveState::UNDEFINED;
+	// Текущий угол повопрота
+	int currentAngle;
+
+	// Время последнего обновления
+	int lastUpdate = 0;
+
+	// Целевое направление смены угла
+	int changeAngleTo;
+	// Направление смены угла
+	int changeAngleDir = 0;
+	// Время смены угла
+	int changeAngleTime;
+	// Скорость смены угла
+	float changeAngleSpeed = 0.0f;
+
+	// Напрвление движения
+	int moveDir = 0;
+
+	// Установить угол (мгновенно)
+	void SetAngle(int angle);
 
 public:
-    Drive(int pin);
-    ~Drive();
+	Drive(int pin, String name);
+	~Drive();
 
-    // Получить текущий угол
-    int GetAngle()
-    {
-        return currentAngle;
-    }
+	bool Init(int initialAngle);
 
-    // Получить состояние двигатаеля
-    DriveState GetState()
-    {
-        return state;
-    }
+	// Обновить состояние двигателя
+	void Update();
 
-    // Установить угол (мгновенно)
-    void SetAngle(unsigned int angle);
-    // Установить угол (за время)
-    void SetAngleSlow(int angle, unsigned int time);
-    // Поворачивать в заданном направлении со скоростью
-    void Move(DriveMoveSpeed speed, bool direction);
+	// Получить текущий угол
+	int GetAngle()
+	{
+		return currentAngle;
+	}
+
+	// Получить состояние двигатаеля
+	DriveState GetState()
+	{
+		return state;
+	}
+	// Установить угол (за время)
+	void ChangeAngle(int angle, int time);
+
+	// Поворачивать в заданном направлении со скоростью
+	void MoveDirection(DriveMoveSpeed speed, bool direction);
 
 };
+
+int StraightenAnlge(int angle);
