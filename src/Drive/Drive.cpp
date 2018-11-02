@@ -22,6 +22,8 @@ bool Drive::Init(int initialAngle)
 {
 	Serial.println("Drive "+ name +": Initializing serial drive");
 
+	// Установить состояние ожидания
+	state = DriveState::WATING;
 	// Перейти в начальное положение
 	SetAngle(initialAngle);
 
@@ -54,21 +56,25 @@ void Drive::Update()
 	int newAngle = currentAngle;
 	int time = millis();				// Текущее время
 	int timeDiff = time - lastUpdate;	// Прошедшее время
+	Serial.println("timeDiff = " + String(timeDiff));
 	switch (state)
 	{
 		// Смена угла в течении времени
 		case DriveState::CHANGE_ANGLE:
-			newAngle = changeAngleSpeed * (float) timeDiff;
-			Serial.println("timeDiff = " + String(timeDiff));
+			newAngle = currentAngle + changeAngleSpeed * (float) timeDiff;
 			Serial.println("newAngle = " + String(newAngle));
 			if ((newAngle > changeAngleTo && changeAngleDir == 1) || (newAngle < changeAngleTo && changeAngleDir == -1))
-				state = DriveState::UNDEFINED;
+			{
+				newAngle = changeAngleTo;
+				state = DriveState::WATING;
+			}
 			break;
 
 		// Двидение в направлении со скоростью
 		case DriveState::MOVE_DIRECTION:
 			break;
 
+		case DriveState::WATING:
 		case DriveState::UNDEFINED:
 		default:
 			break;
@@ -98,11 +104,11 @@ void Drive::ChangeAngle(int newAngle, int time)
 	changeAngleSpeed = ((float) newAngle - (float) currentAngle) / (float) time;
 	changeAngleTime = time;
 
-	Serial.println("state = " + state);
-	Serial.println("changeAngleDir = " + changeAngleDir);
-	Serial.println("changeAngleTo = " + changeAngleTo);
+	Serial.println("state = " + String(state));
+	Serial.println("changeAngleDir = " + String(changeAngleDir));
+	Serial.println("changeAngleTo = " + String(changeAngleTo));
 	Serial.println("changeAgleSpeed = " + String(changeAngleSpeed));
-	Serial.println("changeAngleTime = " + changeAngleTime);
+	Serial.println("changeAngleTime = " + String(changeAngleTime));
 }
 
 // TODO: Реализовать в дальнейшем

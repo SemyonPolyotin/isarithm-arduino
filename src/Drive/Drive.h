@@ -6,6 +6,8 @@ enum DriveState
 {
 	UNDEFINED = 0,
 
+	// Ожидание
+	WATING,
 	// Смена угла
 	CHANGE_ANGLE,
 	// Движение в направлении
@@ -14,9 +16,10 @@ enum DriveState
 
 enum DriveMoveSpeed
 {
-	SLOW = 0,   // Медлено
-	MEDIUM = 1, // Средне
-	FAST = 2,   // Быстро
+	SPEED_UNDEFINED = 0,
+	SLOW = 1,		// Медлено
+	MEDIUM = 2,		// Средне
+	FAST = 3,		// Быстро
 };
 
 // Класс для управления серво двигателем
@@ -62,13 +65,13 @@ public:
 	void Update();
 
 	// Получить текущий угол
-	int GetAngle()
+	inline int GetAngle()
 	{
 		return currentAngle;
 	}
 
 	// Получить состояние двигатаеля
-	DriveState GetState()
+	inline DriveState GetState()
 	{
 		return state;
 	}

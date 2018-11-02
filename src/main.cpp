@@ -3,6 +3,8 @@
 
 #include "Drive/Drive.h"
 
+// #define F_CPU 8000000 // Частота контроллера
+
 Drive* drive1;
 Drive* drive2;
 
@@ -21,8 +23,47 @@ void setup()
 	Serial.println("Program started");
 }
 
+enum SimType
+{
+	ST_SWITCH,
+	ST_MOVE,
+};
+
 bool up = true;
 int switchTime = 5000;
+
+void Simulate(SimType simType)
+{
+	int time = millis();
+	switch (simType)
+	{
+		// Симуляция управления (смена от 0 до 180 за switchTime, пауза)
+		case SimType::ST_SWITCH:
+			if (0 < time % (2 * switchTime) && time % (2 * switchTime) < switchTime && up)
+			{
+				Serial.println("Move towards 180");
+				drive1->ChangeAngle(180, switchTime / 2);
+				up = !up;
+			}
+			else if (switchTime < time % (2 * switchTime) && time % (2 * switchTime) < 2 * switchTime && !up)
+			{
+				Serial.println("Move towards 0");
+				drive1->ChangeAngle(0, switchTime / 2);
+				up = !up;
+			}
+			break;
+
+		// Движение в заданном направлении
+		case SimType::ST_MOVE:
+			break;
+
+		default:
+			break;
+	}
+	
+}
+
+SimType simType = SimType::ST_SWITCH;
 
 // Основной цикл программы
 void loop()
@@ -30,20 +71,8 @@ void loop()
 	// Обновление подсистем
 	drive1->Update();		// Обновление состояния серво двигателя
 
-	// Симуляция управления (смена от 0 до 180 за 2, пауза 3 сек)
-	int time = millis();
-	if (0 < time % (2 * switchTime) && time % (2 * switchTime) < switchTime && up)
-	{
-		Serial.println("Moving towards 180");
-		drive1->ChangeAngle(180, switchTime / 2);
-		up = !up;
-	}
-	else if (switchTime < time % (2 * switchTime) && time % (2 * switchTime) < 2 * switchTime && !up)
-	{
-		Serial.println("Moving towards 0");
-		drive1->ChangeAngle(0, switchTime / 2);
-		up = !up;
-	}
-	
-	delay(switchTime/10);
+	Simulate(simType);		// Симуляция управляющих воздействий
+
+	// delay(switchTime / 20);
+	Serial.println("==============================================================");
 }
