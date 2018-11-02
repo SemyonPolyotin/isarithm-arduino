@@ -41,13 +41,13 @@ void Simulate(SimType simType)
 		case SimType::ST_SWITCH:
 			if (0 < time % (2 * switchTime) && time % (2 * switchTime) < switchTime && up)
 			{
-				Serial.println("Move towards 180");
+				Serial.println("Change to 180");
 				drive1->ChangeAngle(180, switchTime / 2);
 				up = !up;
 			}
 			else if (switchTime < time % (2 * switchTime) && time % (2 * switchTime) < 2 * switchTime && !up)
 			{
-				Serial.println("Move towards 0");
+				Serial.println("Ghange to 0");
 				drive1->ChangeAngle(0, switchTime / 2);
 				up = !up;
 			}
@@ -55,6 +55,18 @@ void Simulate(SimType simType)
 
 		// Движение в заданном направлении
 		case SimType::ST_MOVE:
+			if (0 < time % (2 * switchTime) && time % (2 * switchTime) < switchTime && up)
+			{
+				Serial.println("Move towards positive");
+				drive1->MoveDirection(DriveMoveSpeed::MEDIUM, +1);
+				up = !up;
+			}
+			else if (switchTime < time % (2 * switchTime) && time % (2 * switchTime) < 2 * switchTime && !up)
+			{
+				Serial.println("Move towards negative");
+				drive1->MoveDirection(DriveMoveSpeed::MEDIUM, -1);
+				up = !up;
+			}
 			break;
 
 		default:
@@ -63,7 +75,7 @@ void Simulate(SimType simType)
 	
 }
 
-SimType simType = SimType::ST_SWITCH;
+SimType simType = SimType::ST_MOVE;
 
 // Основной цикл программы
 void loop()

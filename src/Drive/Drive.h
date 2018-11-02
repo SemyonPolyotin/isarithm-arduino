@@ -16,7 +16,7 @@ enum DriveState
 
 enum DriveMoveSpeed
 {
-	SPEED_UNDEFINED = 0,
+	DMS_UNDEFINED = 0,
 	SLOW = 1,		// Медлено
 	MEDIUM = 2,		// Средне
 	FAST = 3,		// Быстро
@@ -27,7 +27,7 @@ class Drive
 {
 private:
 	// Имя двигателя
-	String name = "no_name";
+	String name = "name_undefined";
 
 	// Серво двигатель
 	Servo servo;
@@ -49,8 +49,12 @@ private:
 	// Скорость смены угла
 	float changeAngleSpeed = 0.0f;
 
-	// Напрвление движения
-	int moveDir = 0;
+	// Напрвление движения в сторону
+	int moveDirectionDir = 0;
+	// Скорость движения в сторону
+	DriveMoveSpeed moveDirectionSpeed = DriveMoveSpeed::DMS_UNDEFINED;
+	// Коэфициент скорости движения
+	float koef = 0.02f;
 
 	// Установить угол (мгновенно)
 	void SetAngle(int angle);
@@ -79,7 +83,7 @@ public:
 	void ChangeAngle(int angle, int time);
 
 	// Поворачивать в заданном направлении со скоростью
-	void MoveDirection(DriveMoveSpeed speed, bool direction);
+	void MoveDirection(DriveMoveSpeed speed, int direction);
 
 };
 

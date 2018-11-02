@@ -72,6 +72,18 @@ void Drive::Update()
 
 		// Двидение в направлении со скоростью
 		case DriveState::MOVE_DIRECTION:
+			newAngle = currentAngle + (int) moveDirectionDir * koef * moveDirectionSpeed * timeDiff;
+			Serial.println("newAngle = " + String(newAngle));
+			if (newAngle > 180)
+			{
+				newAngle = 180;
+				state = DriveState::WATING;
+			}
+			else if (newAngle < 0)
+			{
+				newAngle = 0;
+				state = DriveState::WATING;
+			}
 			break;
 
 		case DriveState::WATING:
@@ -112,6 +124,23 @@ void Drive::ChangeAngle(int newAngle, int time)
 }
 
 // TODO: Реализовать в дальнейшем
-void Drive::MoveDirection(DriveMoveSpeed speed, bool direction)
+void Drive::MoveDirection(DriveMoveSpeed speed, int direction)
 {
+	Serial.println("Drive "+ name + ": MoveDirection()");
+
+	Serial.println(direction);
+
+	if (direction > 0) direction = 1;
+	if (direction < 0) direction = -1;
+	if (direction == 0) return;
+	if (currentAngle == 180 && direction == +1) return;
+	if (currentAngle == 0 && direction == -1) return;
+
+	state = DriveState::MOVE_DIRECTION;
+	moveDirectionSpeed = speed;
+	moveDirectionDir = direction;
+
+	Serial.println("state = " + String(state));
+	Serial.println("moveDirectionSpeed = " + String(moveDirectionSpeed));
+	Serial.println("moveDirectionDir = " + String(moveDirectionDir));
 }
