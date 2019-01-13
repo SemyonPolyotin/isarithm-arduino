@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include <ESP32Servo.h> 
 
-#include "Drive/Drive.h"
+#include <utils/Log.h>
+#include <drive/Drive.h>
 
 // #define F_CPU 8000000 // Частота контроллера
 
@@ -11,7 +11,7 @@ Drive* drive2;
 // Настройка программы
 void setup()
 {
-	Serial.begin(9600);
+	LogInit();
 
 	// Создание и инициализация первого серво двигателя
 	drive1 = new Drive(18, "one");
@@ -20,7 +20,7 @@ void setup()
 		// TODO: Выйти из программы
 	}
 	delay(2000);
-	Serial.println("Program started");
+	LogWriteLn("Program started");
 }
 
 enum SimType
@@ -34,20 +34,20 @@ int switchTime = 5000;
 
 void Simulate(SimType simType)
 {
-	int time = millis();
+	unsigned long time = millis();
 	switch (simType)
 	{
 		// Симуляция управления (смена от 0 до 180 за switchTime, пауза)
 		case SimType::ST_SWITCH:
 			if (0 < time % (2 * switchTime) && time % (2 * switchTime) < switchTime && up)
 			{
-				Serial.println("Change to 180");
+				LogWriteLn("Change to 180");
 				drive1->ChangeAngle(180, switchTime / 2);
 				up = !up;
 			}
 			else if (switchTime < time % (2 * switchTime) && time % (2 * switchTime) < 2 * switchTime && !up)
 			{
-				Serial.println("Ghange to 0");
+				LogWriteLn("Ghange to 0");
 				drive1->ChangeAngle(0, switchTime / 2);
 				up = !up;
 			}
@@ -57,13 +57,13 @@ void Simulate(SimType simType)
 		case SimType::ST_MOVE:
 			if (0 < time % (2 * switchTime) && time % (2 * switchTime) < switchTime && up)
 			{
-				Serial.println("Move towards positive");
+				LogWriteLn("Move towards positive");
 				drive1->MoveDirection(DriveMoveSpeed::MEDIUM, +1);
 				up = !up;
 			}
 			else if (switchTime < time % (2 * switchTime) && time % (2 * switchTime) < 2 * switchTime && !up)
 			{
-				Serial.println("Move towards negative");
+				LogWriteLn("Move towards negative");
 				drive1->MoveDirection(DriveMoveSpeed::MEDIUM, -1);
 				up = !up;
 			}
@@ -86,5 +86,5 @@ void loop()
 	Simulate(simType);		// Симуляция управляющих воздействий
 
 	// delay(switchTime / 20);
-	Serial.println("==============================================================");
+	LogWriteLn("==============================================================");
 }

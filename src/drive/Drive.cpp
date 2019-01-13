@@ -1,4 +1,4 @@
-#include "Drive.h"
+#include "drive/Drive.h"
 
 int StraightenAnlge(int angle)
 {
@@ -20,7 +20,7 @@ Drive::Drive(int d_pin, String d_name)
 
 bool Drive::Init(int initialAngle)
 {
-	Serial.println("Drive "+ name +": Initializing serial drive");
+	Serial.println("Drive "+ name +": Initializing serial Drive");
 
 	// Установить состояние ожидания
 	state = DriveState::WATING;
