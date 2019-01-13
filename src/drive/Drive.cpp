@@ -1,3 +1,8 @@
+#include <utility>
+#include <string>
+
+#include <utils/Log.h>
+
 #include "drive/Drive.h"
 
 int StraightenAnlge(int angle)
@@ -7,36 +12,38 @@ int StraightenAnlge(int angle)
 	return angle;
 }
 
-String output;
-
-Drive::Drive(int d_pin, String d_name)
+Drive::Drive(int pin, std::string name)
 {
+	logTrace("Drive::Drive start");
 	// Стандартная частота работы серво двигаетля
 	servo.setPeriodHertz(50);
 	// Подключение к сервоприводу с данными значениями задержек
-	servo.attach(d_pin, 500, 2400);
-	name = d_name;
+	servo.attach(pin, 500, 2400);
+	this->name = std::move(name);
+	logTrace("Drive::Drive end");
 }
 
-bool Drive::Init(int initialAngle)
+bool Drive::init(int initialAngle)
 {
-	Serial.println("Drive "+ name +": Initializing serial Drive");
+	logTrace("Drive::init start");
+	logInfo("Drive "+ name +": Initializing serial Drive");
 
 	// Установить состояние ожидания
 	state = DriveState::WATING;
 	// Перейти в начальное положение
 	SetAngle(initialAngle);
 
+	logTrace("Drive::init end");
 	return true;
 }
 
 Drive::~Drive()
-{
-}
+= default;
 
 void Drive::SetAngle(int newAngle)
 {
-	Serial.println("Drive "+ name +": SetAngle()");
+	logTrace("Drive::SetAnge start");
+	logInfo("Drive "+ name +": SetAngle()");
 
 	newAngle = StraightenAnlge(newAngle);
 
@@ -46,22 +53,24 @@ void Drive::SetAngle(int newAngle)
 
 	servo.write(newAngle);
 	currentAngle = newAngle;
+	logTrace("Drive::SetAnge end");
 }
 
-void Drive::Update()
+void Drive::update()
 {
-	Serial.println("Drive "+ name + ": Update()");
-	Serial.println("currentAngle = " + String(currentAngle));
+	logTrace("");
+	logInfo("Drive "+ name + ": update()");
+	logInfo("currentAngle = " + std::string(String(currentAngle).c_str()));
 
 	int newAngle = currentAngle;
-	int time = millis();				// Текущее время
-	int timeDiff = time - lastUpdate;	// Прошедшее время
+	unsigned long time = millis();				// Текущее время
+	unsigned long timeDiff = time - lastUpdate;	// Прошедшее время
 	Serial.println("timeDiff = " + String(timeDiff));
 	switch (state)
 	{
 		// Смена угла в течении времени
 		case DriveState::CHANGE_ANGLE:
-			newAngle = currentAngle + changeAngleSpeed * (float) timeDiff;
+			newAngle = static_cast<int>(currentAngle + changeAngleSpeed * (float) timeDiff);
 			Serial.println("newAngle = " + String(newAngle));
 			if ((newAngle > changeAngleTo && changeAngleDir == 1) || (newAngle < changeAngleTo && changeAngleDir == -1))
 			{
@@ -72,7 +81,7 @@ void Drive::Update()
 
 		// Двидение в направлении со скоростью
 		case DriveState::MOVE_DIRECTION:
-			newAngle = currentAngle + (int) moveDirectionDir * koef * moveDirectionSpeed * timeDiff;
+			newAngle = static_cast<int>(currentAngle + moveDirectionDir * koef * moveDirectionSpeed * timeDiff);
 			Serial.println("newAngle = " + String(newAngle));
 			if (newAngle > 180)
 			{
@@ -96,12 +105,13 @@ void Drive::Update()
 	{
 		SetAngle(newAngle);
 	}
-	lastUpdate = time;	// Обновление 
+	// Обновление
+	lastUpdate = time;
 }
 
 void Drive::ChangeAngle(int newAngle, int time)
 {
-	Serial.println("Drive "+ name + ": ChangeAngle()");
+	logTrace("Drive "+ name + ": ChangeAngle()");
 
 	newAngle = StraightenAnlge(newAngle);
 
@@ -126,7 +136,7 @@ void Drive::ChangeAngle(int newAngle, int time)
 // TODO: Реализовать в дальнейшем
 void Drive::MoveDirection(DriveMoveSpeed speed, int direction)
 {
-	Serial.println("Drive "+ name + ": MoveDirection()");
+	logTrace("Drive "+ name + ": MoveDirection()");
 
 	Serial.println(direction);
 

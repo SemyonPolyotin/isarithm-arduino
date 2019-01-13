@@ -1,33 +1,27 @@
 #include <Arduino.h>
 
 #include <utils/Log.h>
-#include <drive/Drive.h>
+#include <Device.h>
+#include <bluetooth/Bluetooth.h>
 
-// #define F_CPU 8000000 // Частота контроллера
+// Глобальная переменная устройства
+Device* g_pDevice;
 
 Drive* drive1;
 Drive* drive2;
 
 // Настройка программы
-void setup()
-{
-	LogInit();
+void setup() {
+	// Инициализация логирования
+	logInit();
 
-	// Создание и инициализация первого серво двигателя
-	drive1 = new Drive(18, "one");
-	if (!drive1->Init(90))
-	{
-		// TODO: Выйти из программы
-	}
-	delay(2000);
-	LogWriteLn("Program started");
-}
-
-enum SimType
-{
-	ST_SWITCH,
-	ST_MOVE,
-};
+	// Ининциализация устройства
+	g_pDevice = new Device("Isarithm");
+	if (!g_pDevice->init()) {
+		// Перезапуск контроллера
+		logError("Device initialization failed");
+		digitalWrite(3, LOW);
+	};
 
 bool up = true;
 int switchTime = 5000;
@@ -69,22 +63,13 @@ void Simulate(SimType simType)
 			}
 			break;
 
-		default:
-			break;
-	}
-	
+	logWriteLn("Program started");
 }
 
-SimType simType = SimType::ST_MOVE;
-
 // Основной цикл программы
-void loop()
-{
-	// Обновление подсистем
-	drive1->Update();		// Обновление состояния серво двигателя
+void loop() {
+	// Обновление устройтва
+	g_pDevice->update();
 
-	Simulate(simType);		// Симуляция управляющих воздействий
-
-	// delay(switchTime / 20);
-	LogWriteLn("==============================================================");
+	LogWriteBreak();
 }

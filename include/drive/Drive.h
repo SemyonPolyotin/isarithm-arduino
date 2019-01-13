@@ -27,7 +27,7 @@ class Drive
 {
 private:
 	// Имя двигателя
-	String name = "name_undefined";
+	std::string name = "name_undefined";
 
 	// Серво двигатель
 	Servo servo;
@@ -38,7 +38,7 @@ private:
 	int currentAngle;
 
 	// Время последнего обновления
-	int lastUpdate = 0;
+	unsigned long lastUpdate = 0;
 
 	// Целевое направление смены угла
 	int changeAngleTo;
@@ -60,13 +60,13 @@ private:
 	void SetAngle(int angle);
 
 public:
-	Drive(int pin, String name);
+	Drive(int pin, std::string name);
 	~Drive();
 
-	bool Init(int initialAngle);
+	bool init(int initialAngle);
 
 	// Обновить состояние двигателя
-	void Update();
+	void update();
 
 	// Получить текущий угол
 	inline int GetAngle()
