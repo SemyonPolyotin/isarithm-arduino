@@ -3,6 +3,7 @@
 #include <string>
 
 #include <finger/Finger.h>
+#include <bluetooth/Bluetooth.h>
 
 /**
  * Класс описания состояния устройства
@@ -25,5 +26,6 @@ private:
 	std::string name;
 	// Палец
 	Finger* pFinger;
-
+	// Bluetooth
+	Bluetooth* pBluetooth;
 };

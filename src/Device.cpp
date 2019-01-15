@@ -12,11 +12,14 @@ Device::Device(std::string name) {
 
 bool Device::init() {
 	logDebug("Device::init start");
+	// Ининциализация пальца
 	pFinger = new Finger();
 	if (!pFinger->init()) {
 		logError("Finger initialization failed");
 		return false;
 	}
+	// Инициализация Bluetooth
+	pBluetooth = new Bluetooth();
 	logDebug("Device::init end");
 	return true;
 }
