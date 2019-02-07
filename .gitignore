@@ -554,4 +554,3 @@ DerivedData/
 .pio
 .pioenvs
 .piolibdeps
-CMakeListsPrivate.txt
