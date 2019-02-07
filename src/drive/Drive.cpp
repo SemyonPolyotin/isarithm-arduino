@@ -25,7 +25,7 @@ Drive::Drive(int pin, std::string name)
 
 bool Drive::init(int initialAngle)
 {
-	logTrace("Drive::init start");
+	logTrace("Drive::Init start");
 	logInfo("Drive "+ name +": Initializing serial Drive");
 
 	// Установить состояние ожидания
@@ -33,7 +33,7 @@ bool Drive::init(int initialAngle)
 	// Перейти в начальное положение
 	SetAngle(initialAngle);
 
-	logTrace("Drive::init end");
+	logTrace("Drive::Init end");
 	return true;
 }
 
@@ -133,7 +133,6 @@ void Drive::ChangeAngle(int newAngle, int time)
 	Serial.println("changeAngleTime = " + String(changeAngleTime));
 }
 
-// TODO: Реализовать в дальнейшем
 void Drive::MoveDirection(DriveMoveSpeed speed, int direction)
 {
 	logTrace("Drive "+ name + ": MoveDirection()");

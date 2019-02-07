@@ -11,22 +11,30 @@ Device::Device(std::string name) {
 }
 
 bool Device::init() {
-	logDebug("Device::init start");
+	logDebug("Device::Init start");
 	// Ининциализация пальца
 	pFinger = new Finger();
-	if (!pFinger->init()) {
+	if (!pFinger->Init()) {
 		logError("Finger initialization failed");
 		return false;
 	}
 	// Инициализация Bluetooth
 	pBluetooth = new Bluetooth();
-	logDebug("Device::init end");
+	logDebug("Device::Init end");
 	return true;
 }
 
 void Device::update() {
 	logDebug("Device::update start");
 	// Обновление состояния пальца
-	pFinger->update();
+	pFinger->Update();
+
+	std::string str = pBluetooth->GetCharacteristicValue("servo");
+	if (str == "1") {
+		this->pFinger->Expand();
+	} else if (str == "2") {
+		this->pFinger->Bend();
+	}
+
 	logDebug("Device::update end");
 }

@@ -11,11 +11,17 @@ public:
 	/**
 	 * Инициализация пальца
 	 */
-	bool init();
+	bool Init();
 	/**
 	 * Обновление состояния пальца
 	 */
-	void update();
+	void Update();
+
+	void Reset();
+
+	void Expand();
+
+	void Bend();
 
 private:
 	// Сервопривод

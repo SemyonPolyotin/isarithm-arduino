@@ -12,15 +12,35 @@ Finger::Finger() {
 	logTrace("Finger::Finger end");
 }
 
-bool Finger::init() {
-	logTrace("Finger::init start");
-	logTrace("Finger::init end");
+bool Finger::Init() {
+	logTrace("Finger::Init start");
+	logTrace("Finger::Init end");
 	return true;
 }
 
-void Finger::update() {
-	logTrace("Finger::update start");
+void Finger::Update() {
+	logTrace("Finger::Update start");
 	// Обновление состояния серво двигателя
 	pDrive->update();
-	logTrace("Finger::update end");
+	logTrace("Finger::Update end");
+}
+
+void Finger::Reset() {
+	logTrace("Finger::Reset start");
+	pDrive->ChangeAngle(90, 0);
+	logTrace("Finger::Reset end");
+}
+
+void Finger::Expand() {
+	logTrace("Finger::Expand start");
+	// Разгибание пальца
+	pDrive->MoveDirection(DriveMoveSpeed::MEDIUM, 1);
+	logTrace("Finger::Expand end");
+}
+
+void Finger::Bend() {
+	logTrace("Finger::Bend start");
+	// Сгибание пальца
+	pDrive->MoveDirection(DriveMoveSpeed::MEDIUM, -1);
+	logTrace("Finger::Bend end");
 }
