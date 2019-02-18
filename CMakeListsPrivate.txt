@@ -103,7 +103,7 @@ include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif3
 include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src")
 include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/SimpleBLE/src")
 include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src")
-include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/Update/src")
+include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/update/src")
 include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src")
 include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src")
 include_directories("$ENV{HOME}/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src")

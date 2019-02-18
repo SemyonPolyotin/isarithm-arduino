@@ -1,13 +1,14 @@
 #include <Device.h>
 
+#include <esp32-hal.h>
+
 #include <utils/Log.h>
 
 Device::Device(std::string name) {
-	logDebug("Device::Device start");
+	logTrace("Device::Device start");
 	this->name = name;
 	logInfo("Initializing device " + name);
 	delay(2000);
-	logDebug("Device::Device end");
 }
 
 bool Device::init() {
@@ -20,21 +21,24 @@ bool Device::init() {
 	}
 	// Инициализация Bluetooth
 	pBluetooth = new Bluetooth();
-	logDebug("Device::Init end");
+	// Инициализация акселерометра
+	pAccelerometer = new Accelerometer();
+
 	return true;
 }
 
 void Device::update() {
-	logDebug("Device::update start");
+	logTrace("Device::update start");
+
 	// Обновление состояния пальца
 	pFinger->Update();
-
+	// Обновлене состояния BLE
 	std::string str = pBluetooth->GetCharacteristicValue("servo");
 	if (str == "1") {
 		this->pFinger->Expand();
 	} else if (str == "2") {
 		this->pFinger->Bend();
 	}
-
-	logDebug("Device::update end");
+	// Обновление состояния акселерометра
+	pAccelerometer->update();
 }

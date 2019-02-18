@@ -4,6 +4,7 @@
 
 #include <finger/Finger.h>
 #include <bluetooth/Bluetooth.h>
+#include <accelerometer/Accelerometer.h>
 
 /**
  * Класс описания состояния устройства
@@ -28,4 +29,7 @@ private:
 	Finger* pFinger;
 	// Bluetooth
 	Bluetooth* pBluetooth;
+	// Акселерометр
+	Accelerometer* pAccelerometer;
+
 };
