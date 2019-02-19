@@ -19,10 +19,10 @@ bool Finger::Init() {
 }
 
 void Finger::Update() {
-	logTrace("Finger::update start");
+	logTrace("Finger::Update start");
 	// Обновление состояния серво двигателя
 	pDrive->update();
-	logTrace("Finger::update end");
+	logTrace("Finger::Update end");
 }
 
 void Finger::Reset() {

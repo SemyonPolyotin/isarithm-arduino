@@ -11,7 +11,7 @@ Device::Device(std::string name) {
 	delay(2000);
 }
 
-bool Device::init() {
+bool Device::Init() {
 	logDebug("Device::Init start");
 	// Ининциализация пальца
 	pFinger = new Finger();
@@ -24,11 +24,18 @@ bool Device::init() {
 	// Инициализация акселерометра
 	pAccelerometer = new Accelerometer();
 
+	// Инициализация хранения активностей
+	pActivityStorage = new ActivityStorage();
+	if (pActivityStorage->Init()) {
+		logError("ActivityStorage initialization failed");
+		return false;
+	}
+
 	return true;
 }
 
-void Device::update() {
-	logTrace("Device::update start");
+void Device::Update() {
+	logTrace("Device::Update start");
 
 	// Обновление состояния пальца
 	pFinger->Update();

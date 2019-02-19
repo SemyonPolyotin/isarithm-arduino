@@ -1,11 +1,15 @@
+#include <drive/Drive.h>
+
 #include <utility>
 #include <string>
 
+#include <WString.h>
+#include <esp32-hal.h>
+#include <HardwareSerial.h>
+
 #include <utils/Log.h>
 
-#include "drive/Drive.h"
-
-int StraightenAnlge(int angle)
+int StraightenAngle(int angle)
 {
 	if (angle > 180) angle = 180;
 	if (angle < 0) angle = 0;
@@ -45,7 +49,7 @@ void Drive::SetAngle(int newAngle)
 	logTrace("Drive::SetAnge start");
 	logInfo("Drive "+ name +": SetAngle()");
 
-	newAngle = StraightenAnlge(newAngle);
+	newAngle = StraightenAngle(newAngle);
 
 	Serial.println("newAngle = " + String(newAngle));
 
@@ -59,7 +63,7 @@ void Drive::SetAngle(int newAngle)
 void Drive::update()
 {
 	logTrace("");
-	logInfo("Drive "+ name + ": update()");
+	logInfo("Drive "+ name + ": Update()");
 	logInfo("currentAngle = " + std::string(String(currentAngle).c_str()));
 
 	int newAngle = currentAngle;
@@ -113,7 +117,7 @@ void Drive::ChangeAngle(int newAngle, int time)
 {
 	logTrace("Drive "+ name + ": ChangeAngle()");
 
-	newAngle = StraightenAnlge(newAngle);
+	newAngle = StraightenAngle(newAngle);
 
 	// Если угл не изменился
 	if (currentAngle == newAngle) return;

@@ -13,7 +13,7 @@ void setup() {
 
 	// Ининциализация устройства
 	g_pDevice = new Device("Isarithm");
-	if (!g_pDevice->init()) {
+	if (!g_pDevice->Init()) {
 		// Перезапуск контроллера
 		logError("Device initialization failed");
 		digitalWrite(3, LOW);
@@ -25,7 +25,7 @@ void setup() {
 // Основной цикл программы
 void loop() {
 	// Обновление устройтва
-	g_pDevice->update();
+	g_pDevice->Update();
 
 	LogWriteBreak();
 }

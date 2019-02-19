@@ -5,6 +5,7 @@
 #include <finger/Finger.h>
 #include <bluetooth/Bluetooth.h>
 #include <accelerometer/Accelerometer.h>
+#include <activity/ActivityStorage.h>
 
 /**
  * Класс описания состояния устройства
@@ -16,11 +17,11 @@ public:
 	/**
 	 * Инициализация устройства
 	 */
-	bool init();
+	bool Init();
 	/**
 	 * Обновление устройства
 	 */
-	void update();
+	void Update();
 
 private:
 	// Имя устройства
@@ -31,5 +32,7 @@ private:
 	Bluetooth* pBluetooth;
 	// Акселерометр
 	Accelerometer* pAccelerometer;
+	// Данные активностей
+	ActivityStorage* pActivityStorage;
 
 };

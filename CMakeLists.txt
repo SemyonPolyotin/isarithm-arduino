@@ -51,6 +51,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-file(GLOB_RECURSE HDR_LIST "/Users/matthewpoletin/Documents/Projects/Isarithm/isarithm-arduino/include/*.*" )
-
-add_executable(${PROJECT_NAME} ${SRC_LIST} ${HDR_LIST})
+add_executable(${PROJECT_NAME} ${SRC_LIST})

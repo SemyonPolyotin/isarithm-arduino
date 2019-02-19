@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ESP32Servo.h>
+#include <string>
 
 enum DriveState
 {
@@ -87,4 +88,4 @@ public:
 
 };
 
-int StraightenAnlge(int angle);
+int StraightenAngle(int angle);
