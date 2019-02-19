@@ -4,6 +4,9 @@
 
 #include <utils/Log.h>
 
+#define LED_PIN 2
+bool blinkState = false;
+
 Device::Device(std::string name) {
 	logTrace("Device::Device start");
 	this->name = name;
@@ -23,13 +26,19 @@ bool Device::Init() {
 	pBluetooth = new Bluetooth();
 	// Инициализация акселерометра
 	pAccelerometer = new Accelerometer();
-
+	if (!pAccelerometer->Init()) {
+		logError("Accelerometer initialization failed");
+		return false;
+	}
 	// Инициализация хранения активностей
 	pActivityStorage = new ActivityStorage();
 	if (pActivityStorage->Init()) {
 		logError("ActivityStorage initialization failed");
 		return false;
 	}
+
+	// configure Arduino LED pin for output
+	pinMode(LED_PIN, OUTPUT);
 
 	return true;
 }
@@ -47,5 +56,9 @@ void Device::Update() {
 		this->pFinger->Bend();
 	}
 	// Обновление состояния акселерометра
-	pAccelerometer->update();
+	pAccelerometer->Update();
+
+	// Мигания светодиодом для обозначения активности
+	blinkState = !blinkState;
+	digitalWrite(LED_PIN, static_cast<uint8_t>(blinkState));
 }

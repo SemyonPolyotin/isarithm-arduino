@@ -14,10 +14,12 @@ class Device {
 private:
 public:
 	explicit Device(std::string name);
+
 	/**
 	 * Инициализация устройства
 	 */
 	bool Init();
+
 	/**
 	 * Обновление устройства
 	 */

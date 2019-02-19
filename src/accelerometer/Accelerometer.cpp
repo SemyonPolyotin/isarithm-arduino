@@ -5,30 +5,35 @@
 #include <Wire.h>
 #include <HardwareSerial.h>
 
-#define LED_PIN 2
-bool blinkState = false;
-
 Accelerometer::Accelerometer() {
 	logTrace("Accelerometer::Accelerometer start");
 
+	// Инициализация I2C линии
 	Wire.begin();
 
-	// initialize device
-	Serial.println("Initializing I2C devices...");
-	accelgyro.initialize();
-
-	// verify connection
-	logInfo("Testing device connections...");
-	accelgyro.testConnection() ? logInfo("MPU6050 connection successful") : logError("MPU6050 connection failed");
-
-	// configure Arduino LED pin for output
-	pinMode(LED_PIN, OUTPUT);
+	// Инициализация I2C устройства
+	logInfo("Initializing I2C devices...");
+	mpu.initialize();
 }
 
-void Accelerometer::update() {
-	logTrace("Accelerometer::Accelerometer start");
+bool Accelerometer::Init() {
+	logTrace("Accelerometer::Init start");
 
-	accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+	// Проверка соединения
+	logInfo("Testing device connections...");
+	if (!mpu.testConnection()) {
+		logError("MPU6050 connection failed");
+		return false;
+	}
+
+	logInfo("MPU6050 connection successful");
+	return true;
+}
+
+void Accelerometer::Update() {
+	logTrace("Accelerometer::Update start");
+
+	mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
 	Serial.println(ax);
 	Serial.println(ay);
@@ -36,8 +41,4 @@ void Accelerometer::update() {
 	Serial.println(gx);
 	Serial.println(gy);
 	Serial.println(gz);
-
-	// blink LED to indicate activity
-	blinkState = !blinkState;
-	digitalWrite(LED_PIN, static_cast<uint8_t>(blinkState));
 }

@@ -4,19 +4,22 @@ ESP32 based arduino mockup project
 ## Clion
 ### Project
 ```bash
-    $ git clone https://github.com/matthewpoletin/isarithm-arduino.git 
+    $ git clone https://github.com/matthewpoletin/isarithm-arduino.git
+    $ cd isarithm-arduino
     $ # (Optional)
     $ platformio init --ide clion --board esp32dev
 ```
 ### Additional libraries
 ```bash
     $ platformio lib install "ESP32Servo"
+    $ platformio lib install "I2Cdevlib-MPU6050"
 ```
 
 ## Debug
 To debug use this commands.
 ```bash
     $ pio device monitor -p /dev/ttyS3
+    $ pio device monitor -p /dev/ttyS3 | grep Accelerometer
 ```
 
 ## Appliance

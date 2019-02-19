@@ -7,12 +7,23 @@ class Accelerometer {
 public:
 	Accelerometer();
 
-	void update();
+	/**
+	 * Инициализация акселерометра
+	 * @return Результат инициализации
+	 */
+	bool Init();
+
+	/**
+	 * Обновление состояния акселерометра
+	 */
+	void Update();
 
 private:
-	MPU6050 accelgyro;
+	MPU6050 mpu;
 
+	// Ускорение
 	int16_t ax, ay, az;
+	// Наклон
 	int16_t gx, gy, gz;
 
 };
