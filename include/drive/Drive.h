@@ -8,7 +8,7 @@ enum DriveState
 	UNDEFINED = 0,
 
 	// Ожидание
-	WATING,
+	WAITING,
 	// Смена угла
 	CHANGE_ANGLE,
 	// Движение в направлении

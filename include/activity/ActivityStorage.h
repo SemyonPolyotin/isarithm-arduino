@@ -4,6 +4,9 @@
  * Структура хранения временных записей
  */
 struct TimeRecord {
+	int angleX;
+	int angleY;
+	int angleZ;
 	int accelerationX;
 	int accelerationY;
 	int accelerationZ;
@@ -27,6 +30,7 @@ struct Activity {
  * Данные активностей
  */
 struct ActivityData {
+	int numActivities;
 	Activity activities[MAX_NUM_ACTIVITIES];
 	unsigned int dataValid;
 };

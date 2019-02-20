@@ -37,7 +37,7 @@ bool Device::Init() {
 		return false;
 	}
 
-	// configure Arduino LED pin for output
+	// Конфигурации LED для индикации состояния
 	pinMode(LED_PIN, OUTPUT);
 
 	return true;
@@ -46,17 +46,21 @@ bool Device::Init() {
 void Device::Update() {
 	logTrace("Device::Update start");
 
-	// Обновление состояния пальца
-	pFinger->Update();
 	// Обновлене состояния BLE
 	std::string str = pBluetooth->GetCharacteristicValue("servo");
+
+	// Обновление состояния акселерометра
+	pAccelerometer->Update();
+
+	// Принятие решений по управлению пальцем
 	if (str == "1") {
 		this->pFinger->Expand();
 	} else if (str == "2") {
 		this->pFinger->Bend();
 	}
-	// Обновление состояния акселерометра
-	pAccelerometer->Update();
+
+	// Обновление состояния пальца
+	pFinger->Update();
 
 	// Мигания светодиодом для обозначения активности
 	blinkState = !blinkState;

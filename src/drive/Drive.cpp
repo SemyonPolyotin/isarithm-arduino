@@ -33,7 +33,7 @@ bool Drive::init(int initialAngle)
 	logInfo("Drive "+ name +": Initializing serial Drive");
 
 	// Установить состояние ожидания
-	state = DriveState::WATING;
+	state = DriveState::WAITING;
 	// Перейти в начальное положение
 	SetAngle(initialAngle);
 
@@ -79,7 +79,7 @@ void Drive::update()
 			if ((newAngle > changeAngleTo && changeAngleDir == 1) || (newAngle < changeAngleTo && changeAngleDir == -1))
 			{
 				newAngle = changeAngleTo;
-				state = DriveState::WATING;
+				state = DriveState::WAITING;
 			}
 			break;
 
@@ -90,16 +90,16 @@ void Drive::update()
 			if (newAngle > 180)
 			{
 				newAngle = 180;
-				state = DriveState::WATING;
+				state = DriveState::WAITING;
 			}
 			else if (newAngle < 0)
 			{
 				newAngle = 0;
-				state = DriveState::WATING;
+				state = DriveState::WAITING;
 			}
 			break;
 
-		case DriveState::WATING:
+		case DriveState::WAITING:
 		case DriveState::UNDEFINED:
 		default:
 			break;

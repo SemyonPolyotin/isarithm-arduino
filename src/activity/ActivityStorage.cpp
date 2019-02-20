@@ -5,7 +5,7 @@
 #include <EEPROM.h>
 
 // Изменить это значение при обновлении данных и сброса
-#define DATA_VALID 180
+#define DATA_VALID 190
 
 ActivityStorage::ActivityStorage() {
 	logTrace("ActivityStorage::ActivityStorage start");
