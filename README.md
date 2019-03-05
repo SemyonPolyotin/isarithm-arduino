@@ -1,5 +1,5 @@
 # Isarithm Arduino
-ESP32 based arduino mockup project
+ESP32 based arduino Isarithm project
 
 ## Clion
 ### Project
@@ -34,7 +34,7 @@ To debug use this commands.
 | MPU6050 | GND | ESP32 | Gnd |
 | MPU6050 | SCL | ESP32 | D22 |
 | MPU6050 | SDA | ESP32 | D21 |
-| SG90 | SIG | ESP32 | D18 |
+| SG90 | SIG | ESP32 | D13 |
 | SG90 | VCC | ESP32 | VIN |
 | SG90 | GND | ESP32 | GND |
 

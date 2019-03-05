@@ -9,15 +9,13 @@
 
 #include <utils/Log.h>
 
-int StraightenAngle(int angle)
-{
-	if (angle > 180) angle = 180;
-	if (angle < 0) angle = 0;
+int StraightenAngle(int angle) {
+	if (angle > Drive::maxAngle) angle = Drive::maxAngle;
+	if (angle < Drive::minAngle) angle = Drive::minAngle;
 	return angle;
 }
 
-Drive::Drive(int pin, std::string name)
-{
+Drive::Drive(int pin, std::string name) {
 	logTrace("Drive::Drive start");
 	// Стандартная частота работы серво двигаетля
 	servo.setPeriodHertz(50);
@@ -27,10 +25,9 @@ Drive::Drive(int pin, std::string name)
 	logTrace("Drive::Drive end");
 }
 
-bool Drive::init(int initialAngle)
-{
+bool Drive::Init(int initialAngle) {
 	logTrace("Drive::Init start");
-	logInfo("Drive "+ name +": Initializing serial Drive");
+	logInfo("Drive " + name + ": Initializing serial Drive");
 
 	// Установить состояние ожидания
 	state = DriveState::WAITING;
@@ -44,10 +41,9 @@ bool Drive::init(int initialAngle)
 Drive::~Drive()
 = default;
 
-void Drive::SetAngle(int newAngle)
-{
+void Drive::SetAngle(int newAngle) {
 	logTrace("Drive::SetAnge start");
-	logInfo("Drive "+ name +": SetAngle()");
+	logInfo("Drive " + name + ": SetAngle()");
 
 	newAngle = StraightenAngle(newAngle);
 
@@ -60,62 +56,55 @@ void Drive::SetAngle(int newAngle)
 	logTrace("Drive::SetAnge end");
 }
 
-void Drive::update()
-{
+void Drive::Update() {
 	logTrace("");
-	logInfo("Drive "+ name + ": Update()");
+	logInfo("Drive " + name + ": Update()");
 	logInfo("currentAngle = " + std::string(String(currentAngle).c_str()));
 
 	int newAngle = currentAngle;
-	unsigned long time = millis();				// Текущее время
-	unsigned long timeDiff = time - lastUpdate;	// Прошедшее время
+	unsigned long time = millis();                // Текущее время
+	unsigned long timeDiff = time - lastUpdate;    // Прошедшее время
 	Serial.println("timeDiff = " + String(timeDiff));
-	switch (state)
-	{
-		// Смена угла в течении времени
+	switch (state) {
 		case DriveState::CHANGE_ANGLE:
+			// Смена угла в течении времени
 			newAngle = static_cast<int>(currentAngle + changeAngleSpeed * (float) timeDiff);
 			Serial.println("newAngle = " + String(newAngle));
-			if ((newAngle > changeAngleTo && changeAngleDir == 1) || (newAngle < changeAngleTo && changeAngleDir == -1))
-			{
+			if ((newAngle > changeAngleTo && changeAngleDir == 1) ||
+				(newAngle < changeAngleTo && changeAngleDir == -1)) {
 				newAngle = changeAngleTo;
 				state = DriveState::WAITING;
 			}
 			break;
 
-		// Двидение в направлении со скоростью
 		case DriveState::MOVE_DIRECTION:
+			// Двидение в направлении со скоростью
 			newAngle = static_cast<int>(currentAngle + moveDirectionDir * koef * moveDirectionSpeed * timeDiff);
 			Serial.println("newAngle = " + String(newAngle));
-			if (newAngle > 180)
-			{
+			if (newAngle > 180) {
 				newAngle = 180;
 				state = DriveState::WAITING;
-			}
-			else if (newAngle < 0)
-			{
-				newAngle = 0;
+			} else if (newAngle < Drive::minAngle) {
+				newAngle = Drive::minAngle;
 				state = DriveState::WAITING;
 			}
 			break;
 
 		case DriveState::WAITING:
-		case DriveState::UNDEFINED:
+		case DriveState::DS_UNDEFINED:
 		default:
 			break;
 	}
 
-	if (currentAngle != newAngle)
-	{
+	if (currentAngle != newAngle) {
 		SetAngle(newAngle);
 	}
 	// Обновление
 	lastUpdate = time;
 }
 
-void Drive::ChangeAngle(int newAngle, int time)
-{
-	logTrace("Drive "+ name + ": ChangeAngle()");
+void Drive::ChangeAngle(int newAngle, int time) {
+	logTrace("Drive " + name + ": ChangeAngle()");
 
 	newAngle = StraightenAngle(newAngle);
 
@@ -133,13 +122,12 @@ void Drive::ChangeAngle(int newAngle, int time)
 	Serial.println("state = " + String(state));
 	Serial.println("changeAngleDir = " + String(changeAngleDir));
 	Serial.println("changeAngleTo = " + String(changeAngleTo));
-	Serial.println("changeAgleSpeed = " + String(changeAngleSpeed));
+	Serial.println("changeAngleSpeed = " + String(changeAngleSpeed));
 	Serial.println("changeAngleTime = " + String(changeAngleTime));
 }
 
-void Drive::MoveDirection(DriveMoveSpeed speed, int direction)
-{
-	logTrace("Drive "+ name + ": MoveDirection()");
+void Drive::MoveDirection(DriveMoveSpeed speed, int direction) {
+	logTrace("Drive " + name + ": MoveDirection()");
 
 	Serial.println(direction);
 

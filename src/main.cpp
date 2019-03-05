@@ -19,7 +19,7 @@ void setup() {
 		digitalWrite(3, LOW);
 	};
 
-	logWriteLn("Program started");
+	logInfo("Program started");
 }
 
 // Основной цикл программы

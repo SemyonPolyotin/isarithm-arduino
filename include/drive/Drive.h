@@ -5,7 +5,7 @@
 
 enum DriveState
 {
-	UNDEFINED = 0,
+	DS_UNDEFINED = 0,
 
 	// Ожидание
 	WAITING,
@@ -34,7 +34,7 @@ private:
 	Servo servo;
 
 	// Текущее состояние двигателя
-	DriveState state = DriveState::UNDEFINED;
+	DriveState state = DriveState::DS_UNDEFINED;
 	// Текущий угол повопрота
 	int currentAngle;
 
@@ -64,10 +64,10 @@ public:
 	Drive(int pin, std::string name);
 	~Drive();
 
-	bool init(int initialAngle);
+	bool Init(int initialAngle);
 
 	// Обновить состояние двигателя
-	void update();
+	void Update();
 
 	// Получить текущий угол
 	inline int GetAngle()
@@ -85,6 +85,11 @@ public:
 
 	// Поворачивать в заданном направлении со скоростью
 	void MoveDirection(DriveMoveSpeed speed, int direction);
+
+public:
+	static const int minAngle = 1;
+	static const int maxAngle = 45;
+	static const int defaultAngle = 40;
 
 };
 
