@@ -1,22 +1,90 @@
+#include <utility>
+
 #include <bluetooth/Bluetooth.h>
 
 #include <utils/Log.h>
 
-#define UUID_1 "7eea71e1-8bf4-44ce-ad37-06ef17092c27"
-#define UUID_2 "110eedd3-721d-4ad4-9bcd-8006b7fc4bf9"
+// Состояние наличия подключения
+bool _BLEClientConnected = false;
+
+void ServerCallbacks::onConnect(BLEServer* pServer) {
+	_BLEClientConnected = true;
+}
+
+void ServerCallbacks::onDisconnect(BLEServer* pServer) {
+	_BLEClientConnected = false;
+}
+
+bool Bluetooth::IsConnected() {
+	return _BLEClientConnected;
+}
+
+#define BLE_UUID_SERVICE_BATTERY BLEUUID((uint16_t) 0x180F)
+#define BLE_UUID_CHARACTERISTIC_BATTERY_LEVEL BLEUUID((uint16_t) 0x2A19)
+
+#define BLE_UUID_SERVICE_DEVICE_INFORMATION BLEUUID((uint16_t) 0x180A)
+#define BLE_UUID_CHARACTERISTIC_MANUFACTURER_NAME_STRING BLEUUID((uint16_t) 0x2A29)
+#define BLE_UUID_CHARACTERISTIC_MODEL_NUMBER_STRING BLEUUID((uint16_t) 0x2A24)
+
+#define BLE_UUID_SERVICE_USER_DATA BLEUUID((uint16_t) 0x181C)
+#define BLE_UUID_CHARACTERISTIC_FIRST_NAME BLEUUID((uint16_t) 0x2A8A)
+#define BLE_UUID_CHARACTERISTIC_LAST_NAME BLEUUID((uint16_t) 0x2A8A)
+#define BLE_UUID_CHARACTERISTIC_EMAIL_ADDRESS BLEUUID((uint16_t) 0x2A87)
+
+#define UUID_SERVICE "7eea71e1-8bf4-44ce-ad37-06ef17092c27"
+#define UUID_CHAR_STATUS "110eedd3-721d-4ad4-9bcd-8006b7fc4bf3"
+#define UUID_CHAR_SERVO "110eedd3-721d-4ad4-9bcd-8006b7fc4bf9"
+
+#define UUID_3 "110eedd3-721d-4ad4-9bcd-8006b7fc4bf2"
 
 Bluetooth::Bluetooth() {
 	logTrace("Bluetooth::Bluetooth start");
 	BLEDevice::init("Isarithm");
 	BLEServer* pServer = BLEDevice::createServer();
-	BLEService* pService = pServer->createService(UUID_1);
-	BLECharacteristic* pCharacteristic = pService->createCharacteristic(UUID_2,
-																		BLECharacteristic::PROPERTY_READ |
-																		BLECharacteristic::PROPERTY_WRITE
-	);
-	this->servoCharacteristic = pCharacteristic;
-	pCharacteristic->setValue("Isarithm online");
-	pService->start();
+	pServer->setCallbacks(new ServerCallbacks());
+
+	// Device info
+	BLEService* pDeviceService = pServer->createService(BLE_UUID_SERVICE_DEVICE_INFORMATION);
+	pDeviceService->createCharacteristic(BLE_UUID_CHARACTERISTIC_MANUFACTURER_NAME_STRING,
+										 BLECharacteristic::PROPERTY_READ
+	)->setValue("Semyon Polyotin");
+	pDeviceService->createCharacteristic(BLE_UUID_CHARACTERISTIC_MODEL_NUMBER_STRING,
+										 BLECharacteristic::PROPERTY_READ
+	)->setValue("Isarithm");
+	pDeviceService->start();
+
+	// Battery service
+	BLEService* pBatteryService = pServer->createService(BLE_UUID_SERVICE_BATTERY);
+	uint8_t val = 100;
+	pBatteryService->createCharacteristic(BLE_UUID_CHARACTERISTIC_BATTERY_LEVEL,
+										  BLECharacteristic::PROPERTY_READ
+	)->setValue(&val, 1);
+	pBatteryService->start();
+
+	// User data
+	BLEService* pUserDataService = pServer->createService(BLE_UUID_SERVICE_USER_DATA);
+	pUserDataService->createCharacteristic(BLE_UUID_CHARACTERISTIC_FIRST_NAME,
+										   BLECharacteristic::PROPERTY_READ |
+										   BLECharacteristic::PROPERTY_WRITE);
+	pUserDataService->createCharacteristic(BLE_UUID_CHARACTERISTIC_LAST_NAME,
+										   BLECharacteristic::PROPERTY_READ |
+										   BLECharacteristic::PROPERTY_WRITE);
+	pUserDataService->createCharacteristic(BLE_UUID_CHARACTERISTIC_EMAIL_ADDRESS,
+										   BLECharacteristic::PROPERTY_READ |
+										   BLECharacteristic::PROPERTY_WRITE);
+	pUserDataService->start();
+
+	// Custom service
+	BLEService* pCustomService = pServer->createService(UUID_SERVICE);
+	this->statusCharacteristic = pCustomService->createCharacteristic(UUID_CHAR_STATUS,
+																	  BLECharacteristic::PROPERTY_READ |
+																	  BLECharacteristic::PROPERTY_WRITE);
+	this->statusCharacteristic->setValue("Isarithm online");
+	this->servoCharacteristic = pCustomService->createCharacteristic(UUID_CHAR_SERVO,
+																	 BLECharacteristic::PROPERTY_READ |
+																	 BLECharacteristic::PROPERTY_WRITE);
+	pCustomService->start();
+
 	BLEAdvertising* pAdvertising = pServer->getAdvertising();
 	pAdvertising->start();
 	logTrace("Bluetooth::Bluetooth end");
@@ -24,7 +92,7 @@ Bluetooth::Bluetooth() {
 
 bool Bluetooth::SetCharacteristicValue(std::string name, std::string data) {
 	logTrace("Bluetooth::SetCharacteristicValue start");
-	servoCharacteristic->setValue(data);
+	servoCharacteristic->setValue(std::move(data));
 	logTrace("Bluetooth::SetCharacteristicValue end");
 	return true;
 }

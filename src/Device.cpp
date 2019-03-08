@@ -63,6 +63,10 @@ void Device::Update() {
 	pFinger->Update();
 
 	// Мигания светодиодом для обозначения активности
-	blinkState = !blinkState;
-	digitalWrite(LED_PIN, static_cast<uint8_t>(blinkState));
+	if (pBluetooth->IsConnected()) {
+		digitalWrite(LED_PIN, 1);
+	} else {
+		blinkState = !blinkState;
+		digitalWrite(LED_PIN, static_cast<uint8_t>(blinkState));
+	}
 }
