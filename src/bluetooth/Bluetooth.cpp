@@ -32,9 +32,8 @@ bool Bluetooth::IsConnected() {
 #define BLE_UUID_CHARACTERISTIC_EMAIL_ADDRESS BLEUUID((uint16_t) 0x2A87)
 
 #define UUID_SERVICE "7eea71e1-8bf4-44ce-ad37-06ef17092c27"
-#define UUID_CHAR_STATUS "110eedd3-721d-4ad4-9bcd-8006b7fc4bf3"
-#define UUID_CHAR_SERVO "110eedd3-721d-4ad4-9bcd-8006b7fc4bf9"
-
+#define UUID_CHAR_STATUS "3c720a95-549e-46be-8a4a-3a5b8c0517fb"
+#define UUID_CHAR_SERVO_COMMANDS "110eedd3-721d-4ad4-9bcd-8006b7fc4bf9"
 #define UUID_3 "110eedd3-721d-4ad4-9bcd-8006b7fc4bf2"
 
 Bluetooth::Bluetooth() {
@@ -80,7 +79,7 @@ Bluetooth::Bluetooth() {
 																	  BLECharacteristic::PROPERTY_READ |
 																	  BLECharacteristic::PROPERTY_WRITE);
 	this->statusCharacteristic->setValue("Isarithm online");
-	this->servoCharacteristic = pCustomService->createCharacteristic(UUID_CHAR_SERVO,
+	this->servoCharacteristic = pCustomService->createCharacteristic(UUID_CHAR_SERVO_COMMANDS,
 																	 BLECharacteristic::PROPERTY_READ |
 																	 BLECharacteristic::PROPERTY_WRITE);
 	pCustomService->start();

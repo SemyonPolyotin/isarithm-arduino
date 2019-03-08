@@ -7,6 +7,8 @@
 #define LED_PIN 2
 bool blinkState = false;
 
+std::string lastKnownCommand = "default";
+
 Device::Device(std::string name) {
 	logTrace("Device::Device start");
 	this->name = name;
@@ -47,16 +49,21 @@ void Device::Update() {
 	logTrace("Device::Update start");
 
 	// Обновлене состояния BLE
-	std::string str = pBluetooth->GetCharacteristicValue("servo");
+	std::string servoCommand = pBluetooth->GetCharacteristicValue("servo");
 
 	// Обновление состояния акселерометра
 	pAccelerometer->Update();
 
 	// Принятие решений по управлению пальцем
-	if (str == "1") {
-		this->pFinger->Expand();
-	} else if (str == "2") {
-		this->pFinger->Bend();
+	if (lastKnownCommand != servoCommand) {
+		if (servoCommand == "bend") {
+			this->pFinger->Bend();
+		} else if (servoCommand == "expand") {
+			this->pFinger->Expand();
+		} else if (servoCommand == "default") {
+			this->pFinger->Default();
+		}
+		lastKnownCommand = servoCommand;
 	}
 
 	// Обновление состояния пальца

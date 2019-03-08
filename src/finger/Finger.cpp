@@ -38,3 +38,9 @@ void Finger::Bend() {
 	// Сгибание пальца
 	pDrive->MoveDirection(DriveMoveSpeed::MEDIUM, -1);
 }
+
+void Finger::Default() {
+	logTrace("Finger::Default start");
+	// Сгибание пальца
+	pDrive->ChangeAngle(Drive::defaultAngle, 0);
+}
