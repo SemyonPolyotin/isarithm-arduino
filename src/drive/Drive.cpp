@@ -1,12 +1,5 @@
 #include <drive/Drive.h>
 
-#include <utility>
-#include <string>
-
-#include <WString.h>
-#include <esp32-hal.h>
-#include <HardwareSerial.h>
-
 #include <utils/Log.h>
 
 int StraightenAngle(int angle) {
@@ -64,7 +57,7 @@ void Drive::Update() {
 	int newAngle = currentAngle;
 	unsigned long time = millis();                // Текущее время
 	unsigned long timeDiff = time - lastUpdate;    // Прошедшее время
-	Serial.println("timeDiff = " + String(timeDiff));
+	logInfo("timeDiff = " + std::string(String(timeDiff).c_str()));
 	switch (state) {
 		case DriveState::CHANGE_ANGLE:
 			// Смена угла в течении времени

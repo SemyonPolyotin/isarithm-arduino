@@ -6,7 +6,6 @@
 enum DriveState
 {
 	DS_UNDEFINED = 0,
-
 	// Ожидание
 	WAITING,
 	// Смена угла
@@ -18,9 +17,12 @@ enum DriveState
 enum DriveMoveSpeed
 {
 	DMS_UNDEFINED = 0,
-	SLOW = 1,		// Медлено
-	MEDIUM = 2,		// Средне
-	FAST = 3,		// Быстро
+	// Медлено
+	SLOW = 1,
+	// Средне
+	MEDIUM = 2,
+	// Быстро
+	FAST = 3,
 };
 
 // Класс для управления серво двигателем
@@ -88,7 +90,7 @@ public:
 
 public:
 	static const int minAngle = 1;
-	static const int maxAngle = 45;
+	static const int maxAngle = 60;
 	static const int defaultAngle = 40;
 
 };

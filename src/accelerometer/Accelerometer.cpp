@@ -33,12 +33,15 @@ bool Accelerometer::Init() {
 void Accelerometer::Update() {
 	logTrace("Accelerometer::Update start");
 
-	mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+	mpu.getMotion6(&data.ax, &data.ay, &data.az, &data.gx, &data.gy, &data.gz);
 
-	Serial.println(ax);
-	Serial.println(ay);
-	Serial.println(az);
-	Serial.println(gx);
-	Serial.println(gy);
-	Serial.println(gz);
+	Serial.printf("Accelerometer (%d, %d, %d) (%d, %d, %d)\n", data.ax, data.ay, data.az, data.gx, data.gy, data.gz);
+}
+
+AccelerometerData Accelerometer::GetData() {
+	return data;
+}
+
+AccelerometerData Accelerometer::GetDefaultData() {
+	return {0, 0, 0, 0, 0, 0};
 }

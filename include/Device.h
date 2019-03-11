@@ -11,12 +11,16 @@
  * Класс описания состояния устройства
  */
 class Device {
-private:
 public:
+	/**
+	 * Конструктор устройства
+	 * @param name Название утройства
+	 */
 	explicit Device(std::string name);
 
 	/**
 	 * Инициализация устройства
+	 * @return Результат инициализации
 	 */
 	bool Init();
 

@@ -7,7 +7,11 @@
 #define LED_PIN 2
 bool blinkState = false;
 
-std::string lastKnownCommand = "default";
+// Последняя переданная команда BLE
+FingerCommand servoCommand = FC_UNDEFINED;
+
+// Данные акселерометра прошлой итерации
+AccelerometerData lastAccelerometerData = Accelerometer::GetDefaultData();
 
 Device::Device(std::string name) {
 	logTrace("Device::Device start");
@@ -49,22 +53,46 @@ void Device::Update() {
 	logTrace("Device::Update start");
 
 	// Обновлене состояния BLE
-	std::string servoCommand = pBluetooth->GetCharacteristicValue("servo");
+	std::string servoCommandStr = pBluetooth->GetCharacteristicValue("servo");
 
 	// Обновление состояния акселерометра
 	pAccelerometer->Update();
 
-	// Принятие решений по управлению пальцем
-	if (lastKnownCommand != servoCommand) {
-		if (servoCommand == "bend") {
-			this->pFinger->Bend();
-		} else if (servoCommand == "expand") {
-			this->pFinger->Expand();
-		} else if (servoCommand == "default") {
-			this->pFinger->Default();
-		}
-		lastKnownCommand = servoCommand;
+	AccelerometerData newAccelerometerData = pAccelerometer->GetData();
+
+	// Обработка входящих команд
+	if (servoCommandStr == "bend") {
+		servoCommand = FC_BEND;
+	} else if (servoCommandStr == "expand") {
+		servoCommand = FC_EXPAND;
+	} else if (servoCommandStr == "default") {
+		servoCommand = FC_DEFAULT;
 	}
+
+	// Обработка данных акселерометра
+	if (!(lastAccelerometerData.ax == 0 && lastAccelerometerData.ay == 0)) {
+		if (abs(newAccelerometerData.ax - lastAccelerometerData.ax) > 3000) {
+			servoCommand = FC_EXPAND;
+		}
+	}
+	lastAccelerometerData = newAccelerometerData;
+
+	//  Принятие решений по управлению пальцем
+	switch (servoCommand) {
+		case FC_BEND:
+			pFinger->Bend();
+			break;
+		case FC_DEFAULT:
+			pFinger->Default();
+			break;
+		case FC_EXPAND:
+			pFinger->Expand();
+			break;
+		case FC_UNDEFINED:
+		default:
+			break;
+	}
+	servoCommand = FC_UNDEFINED;
 
 	// Обновление состояния пальца
 	pFinger->Update();

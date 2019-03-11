@@ -97,5 +97,7 @@ bool Bluetooth::SetCharacteristicValue(std::string name, std::string data) {
 }
 
 std::string Bluetooth::GetCharacteristicValue(std::string name) {
-	return servoCharacteristic->getValue();
+	std::string val = servoCharacteristic->getValue();
+	servoCharacteristic->setValue("");
+	return val;
 }

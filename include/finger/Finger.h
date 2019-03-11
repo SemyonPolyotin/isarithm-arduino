@@ -2,6 +2,13 @@
 
 #include <drive/Drive.h>
 
+enum FingerCommand {
+	FC_UNDEFINED = 0,
+	FC_BEND = 1,
+	FC_DEFAULT = 2,
+	FC_EXPAND = 3
+};
+
 /**
  * Класс описания пальца
  */

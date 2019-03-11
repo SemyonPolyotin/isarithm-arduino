@@ -24,7 +24,7 @@ public:
 
 	std::string GetCharacteristicValue(std::string name);
 
-	bool IsConnected();
+	static bool IsConnected();
 
 private:
 	// Ассоциативный массив характеристик

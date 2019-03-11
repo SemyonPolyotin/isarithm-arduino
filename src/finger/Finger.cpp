@@ -12,6 +12,7 @@ bool Finger::Init() {
 	logTrace("Finger::Init start");
 	if (!pDrive->Init(Drive::defaultAngle)) {
 		logWriteLn("Drive one initialization failed");
+		return false;
 	}
 	return true;
 }
@@ -30,13 +31,13 @@ void Finger::Reset() {
 void Finger::Expand() {
 	logTrace("Finger::Expand start");
 	// Разгибание пальца
-	pDrive->MoveDirection(DriveMoveSpeed::MEDIUM, 1);
+	pDrive->MoveDirection(DriveMoveSpeed::MEDIUM, -1);
 }
 
 void Finger::Bend() {
 	logTrace("Finger::Bend start");
 	// Сгибание пальца
-	pDrive->MoveDirection(DriveMoveSpeed::MEDIUM, -1);
+	pDrive->MoveDirection(DriveMoveSpeed::MEDIUM, 1);
 }
 
 void Finger::Default() {
