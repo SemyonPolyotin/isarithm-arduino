@@ -9,7 +9,7 @@ bool logInit() {
 }
 
 void logWriteLn(std::string buf) {
-	Serial.println(buf.c_str());
+//	Serial.println(buf.c_str());
 }
 
 void LogWriteBreak() {

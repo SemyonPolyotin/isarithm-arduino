@@ -20,7 +20,7 @@ Drive::Drive(int pin, std::string name) {
 
 bool Drive::Init(int initialAngle) {
 	logTrace("Drive::Init start");
-	logInfo("Drive " + name + ": Initializing serial Drive");
+	logInfo("Drive " + name + ": Initializing servo Drive");
 
 	// Установить состояние ожидания
 	state = DriveState::WAITING;
@@ -40,7 +40,7 @@ void Drive::SetAngle(int newAngle) {
 
 	newAngle = StraightenAngle(newAngle);
 
-	Serial.println("newAngle = " + String(newAngle));
+	logInfo("newAngle = " + std::string(String(newAngle).c_str()));
 
 	if (currentAngle == newAngle) return;
 
@@ -62,7 +62,7 @@ void Drive::Update() {
 		case DriveState::CHANGE_ANGLE:
 			// Смена угла в течении времени
 			newAngle = static_cast<int>(currentAngle + changeAngleSpeed * (float) timeDiff);
-			Serial.println("newAngle = " + String(newAngle));
+			logInfo("newAngle = " + std::string(String(newAngle).c_str()));
 			if ((newAngle > changeAngleTo && changeAngleDir == 1) ||
 				(newAngle < changeAngleTo && changeAngleDir == -1)) {
 				newAngle = changeAngleTo;
@@ -73,7 +73,7 @@ void Drive::Update() {
 		case DriveState::MOVE_DIRECTION:
 			// Двидение в направлении со скоростью
 			newAngle = static_cast<int>(currentAngle + moveDirectionDir * koef * moveDirectionSpeed * timeDiff);
-			Serial.println("newAngle = " + String(newAngle));
+			logInfo("newAngle = " + std::string(String(newAngle).c_str()));
 			if (newAngle > 180) {
 				newAngle = 180;
 				state = DriveState::WAITING;
@@ -104,7 +104,7 @@ void Drive::ChangeAngle(int newAngle, int time) {
 	// Если угл не изменился
 	if (currentAngle == newAngle) return;
 
-	Serial.println("newAngle = " + String(newAngle));
+	logInfo("newAngle = " + std::string(String(newAngle).c_str()));
 
 	state = DriveState::CHANGE_ANGLE;
 	changeAngleDir = (newAngle - currentAngle) / abs(newAngle - currentAngle);
@@ -112,17 +112,17 @@ void Drive::ChangeAngle(int newAngle, int time) {
 	changeAngleSpeed = ((float) newAngle - (float) currentAngle) / (float) time;
 	changeAngleTime = time;
 
-	Serial.println("state = " + String(state));
-	Serial.println("changeAngleDir = " + String(changeAngleDir));
-	Serial.println("changeAngleTo = " + String(changeAngleTo));
-	Serial.println("changeAngleSpeed = " + String(changeAngleSpeed));
-	Serial.println("changeAngleTime = " + String(changeAngleTime));
+	logInfo("state = " + std::string(String(state).c_str()));
+	logInfo("changeAngleDir = " + std::string(String(changeAngleDir).c_str()));
+	logInfo("changeAngleTo = " + std::string(String(changeAngleTo).c_str()));
+	logInfo("changeAngleSpeed = " + std::string(String(changeAngleSpeed).c_str()));
+	logInfo("changeAngleTime = " + std::string(String(changeAngleTime).c_str()));
 }
 
 void Drive::MoveDirection(DriveMoveSpeed speed, int direction) {
 	logTrace("Drive " + name + ": MoveDirection()");
 
-	Serial.println(direction);
+	logInfo(std::string(String(direction).c_str()));
 
 	if (direction > 0) direction = 1;
 	if (direction < 0) direction = -1;
@@ -134,7 +134,7 @@ void Drive::MoveDirection(DriveMoveSpeed speed, int direction) {
 	moveDirectionSpeed = speed;
 	moveDirectionDir = direction;
 
-	Serial.println("state = " + String(state));
-	Serial.println("moveDirectionSpeed = " + String(moveDirectionSpeed));
-	Serial.println("moveDirectionDir = " + String(moveDirectionDir));
+	logInfo("state = " + std::string(String(state).c_str()));
+	logInfo("moveDirectionSpeed = " + std::string(String(moveDirectionSpeed).c_str()));
+	logInfo("moveDirectionDir = " + std::string(String(moveDirectionDir).c_str()));
 }

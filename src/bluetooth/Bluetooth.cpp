@@ -5,18 +5,18 @@
 #include <utils/Log.h>
 
 // Состояние наличия подключения
-bool _BLEClientConnected = false;
+bool bIsClientConnected = false;
 
 void ServerCallbacks::onConnect(BLEServer* pServer) {
-	_BLEClientConnected = true;
+	bIsClientConnected = true;
 }
 
 void ServerCallbacks::onDisconnect(BLEServer* pServer) {
-	_BLEClientConnected = false;
+	bIsClientConnected = false;
 }
 
 bool Bluetooth::IsConnected() {
-	return _BLEClientConnected;
+	return bIsClientConnected;
 }
 
 #define BLE_UUID_SERVICE_BATTERY BLEUUID((uint16_t) 0x180F)
@@ -34,7 +34,6 @@ bool Bluetooth::IsConnected() {
 #define UUID_SERVICE "7eea71e1-8bf4-44ce-ad37-06ef17092c27"
 #define UUID_CHAR_STATUS "3c720a95-549e-46be-8a4a-3a5b8c0517fb"
 #define UUID_CHAR_SERVO_COMMANDS "110eedd3-721d-4ad4-9bcd-8006b7fc4bf9"
-#define UUID_3 "110eedd3-721d-4ad4-9bcd-8006b7fc4bf2"
 
 Bluetooth::Bluetooth() {
 	logTrace("Bluetooth::Bluetooth start");
